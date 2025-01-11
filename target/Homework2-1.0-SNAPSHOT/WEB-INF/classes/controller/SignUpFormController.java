@@ -4,6 +4,7 @@ import deim.urv.cat.homework2.model.AlertMessage;
 import deim.urv.cat.homework2.model.SignUpAttempts;
 import deim.urv.cat.homework2.service.UserService;
 import deim.urv.cat.homework2.model.User;
+import deim.urv.cat.homework2.model.Usuari;
 
 import jakarta.inject.Inject;
 import jakarta.mvc.Controller;
@@ -58,7 +59,7 @@ public class SignUpFormController {
             return "signup-form.jsp";
         }
        
-        User user = service.findUserByEmail(userForm.getEmail());
+        Usuari user = service.findUserByEmail(userForm.getEmail());
         if (user != null) {
             // Try again
             log.log(Level.WARNING, "A user with this e-mail address {0} already exists.", userForm.getEmail());

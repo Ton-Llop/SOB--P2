@@ -3,12 +3,17 @@ package deim.urv.cat.homework2.service;
 import java.util.ArrayList;
 import java.util.List;
 import deim.urv.cat.homework2.model.Article;
+import deim.urv.cat.homework2.model.Usuari;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 
 public class ArticleServiceImpl implements ArticleService {
@@ -21,28 +26,42 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<Article> getByTopicAndUser(String authorId, String... topicsId) {
-        try {
-            String queryParams = "?author=" + authorId;
-            if (topicsId != null && topicsId.length > 0) {
-                queryParams += "&topic=" + String.join(",", topicsId);
+public List<Article> getByTopicAndUser(String authorId, String... topicsId) {
+    try {
+        // Construir els paràmetres de la consulta
+        StringBuilder queryParams = new StringBuilder();
+        if (authorId != null && !authorId.isEmpty()) {
+            queryParams.append("?author=").append(URLEncoder.encode(authorId, StandardCharsets.UTF_8));
+        }
+        if (topicsId != null && topicsId.length > 0) {
+            if (queryParams.length() > 0) {
+                queryParams.append("&");
+            } else {
+                queryParams.append("?");
             }
+            queryParams.append("topic=").append(URLEncoder.encode(String.join(",", topicsId), StandardCharsets.UTF_8));
+        }
 
-            Response response = client.target(BASE_URL + queryParams)
+        // Fer la crida REST
+        Response response = client.target(BASE_URL + queryParams.toString())
                 .request(MediaType.APPLICATION_JSON)
                 .get();
 
-            if (response.getStatus() == Response.Status.OK.getStatusCode()) {
-                return response.readEntity(new GenericType<List<Article>>() {});
-            } else {
-                System.err.println("Error al obtener artículos: " + response.getStatusInfo());
-                return new ArrayList<>();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        // Comprovar la resposta
+        if (response.getStatus() == Response.Status.OK.getStatusCode()) {
+            return response.readEntity(new GenericType<List<Article>>() {});
+        } else {
+            System.err.println("Error al obtenir articles. Codi: " + response.getStatus());
+            System.err.println("Detall de l'error: " + response.readEntity(String.class));
             return new ArrayList<>();
         }
+    } catch (Exception e) {
+        System.err.println("Excepció al obtenir articles: " + e.getMessage());
+        e.printStackTrace();
+        return new ArrayList<>();
     }
+}
+
 
     @Override
     public List<Article> getAllArticle() {
@@ -83,21 +102,44 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public int crearArticle(Article nou) {
-        try {
-            Response response = client.target(BASE_URL)
-                .request(MediaType.APPLICATION_JSON)
-                .post(Entity.entity(nou, MediaType.APPLICATION_JSON));
+    public int crearArticle(Article nou, String username, String encodedPassword) {
+    try {
+        Response response;
 
-            if (response.getStatus() == Response.Status.CREATED.getStatusCode()) {
-                return response.readEntity(Integer.class);
-            } else {
-                System.err.println("Error al crear artículo: " + response.getStatusInfo());
-                return -1;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return -1;
+        // Verifica si s'han proporcionat credencials
+        if (username != null && encodedPassword != null) {
+            // Combina el nom d'usuari i la contrasenya en format Basic Authentication
+            String credentials = username + ":" + encodedPassword;
+            String encodedCredentials = Base64.getEncoder().encodeToString(credentials.getBytes());
+
+            // Envia la sol·licitud amb l'encapçalament Authorization
+            response = client.target(BASE_URL)
+                    .request(MediaType.APPLICATION_JSON)
+                    .header(HttpHeaders.AUTHORIZATION, "Basic " + encodedCredentials)
+                    .post(Entity.entity(nou, MediaType.APPLICATION_JSON));
+        } else {
+            // Envia la sol·licitud sense credencials
+            response = client.target(BASE_URL)
+                    .request(MediaType.APPLICATION_JSON)
+                    .post(Entity.entity(nou, MediaType.APPLICATION_JSON));
         }
+
+        // Processa la resposta
+        if (response.getStatus() == Response.Status.CREATED.getStatusCode()) {
+            // L'article s'ha creat correctament, retorna l'ID
+            int idArticle = response.readEntity(Integer.class);
+            System.out.println("Article creat amb ID: " + idArticle);
+            return idArticle;
+        } else {
+            // Mostra errors si la creació ha fallat
+            System.err.println("Error al crear article: " + response.getStatus());
+            System.err.println("Missatge del servidor: " + response.readEntity(String.class));
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
     }
+
+    return 0; // Retorna 0 si alguna cosa ha fallat
+}
+
 }
