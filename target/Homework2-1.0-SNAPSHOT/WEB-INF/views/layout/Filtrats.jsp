@@ -45,7 +45,7 @@
             <c:otherwise>
                 <!-- Mostra un missatge d'error -->
                 <p class="error">No s'han trobat articles amb els criteris seleccionats.</p>
-                <a href="<c:url value='/filtrar'/>">Torna al formulari de filtres</a>
+                <a href="<c:url value='/Web/Filtrar'/>">Torna al formulari de filtres</a>
             </c:otherwise>
         </c:choose>
     </main>

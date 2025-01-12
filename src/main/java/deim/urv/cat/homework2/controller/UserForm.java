@@ -14,14 +14,14 @@ import java.io.Serializable;
 @RequestScoped
 public class UserForm implements Serializable {
     private static final long serialVersionUID = 1L;
-        
+
     // JSR 303 validation
     @NotBlank
     @FormParam("firstName")
     @MvcBinding
     @Size(min=2, max=30, message = "First name must be between 2 and 30 characters")
     private String firstName;
-    
+
     // JSR 303 validation
     @NotBlank
     @FormParam("lastName")
@@ -34,17 +34,24 @@ public class UserForm implements Serializable {
     @Email(message = "Email should be valid")
     @MvcBinding
     private String email;
-    
+
     @NotBlank
     @FormParam("dni")
     @MvcBinding
     @Pattern(regexp = "\\d{8}[A-Za-z]", message = "DNI must have 8 digits followed by a letter")
     private String dni;
-    
+
     @FormParam("telef")
     @MvcBinding
     private int telef;
-    
+
+    // Nuevo campo para username
+    @NotBlank
+    @FormParam("username")
+    @MvcBinding
+    @Size(min=3, max=20, message = "Username must be between 3 and 20 characters")
+    private String username;
+
     public String getFirstName() {
         return fixNull(this.firstName);
     }
@@ -68,7 +75,7 @@ public class UserForm implements Serializable {
     public void setEmail(String email) {
         this.email = email;
     }
-    
+
     public String getDni() {
         return fixNull(this.dni);
     }
@@ -84,6 +91,17 @@ public class UserForm implements Serializable {
     public void setTelef(int telef) {
         this.telef = telef;
     }
+
+    // Getter para username
+    public String getUsername() {
+        return fixNull(this.username);
+    }
+
+    // Setter para username
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     private String fixNull(String in) {
         return (in == null) ? "" : in;
     }

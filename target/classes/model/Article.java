@@ -130,4 +130,12 @@ public class Article implements Serializable {
     public String toString() {
         return "Article[ title=" + title + ", author=" + (author != null ? author.getUsername() : "unknown") + " ]";
     }
+
+    public void setImatge(String imatge) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    public void setImage(String image) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }

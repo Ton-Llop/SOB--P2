@@ -17,7 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Controller
-@Path("filtrar")
+@Path("/Filtrar")
 public class FilterController {
 
     @Inject
@@ -40,7 +40,7 @@ public class FilterController {
         } else {
             models.put("isLoggedIn", false);
         }
-        return "/WEB-INF/views/filterForm.jsp";
+        return "/WEB-INF/views/Filter.jsp";
     }
 
     @POST
@@ -70,7 +70,7 @@ public String filterArticles(@FormParam("autor") String author,
         models.put("isLoggedIn", false);
     }
 
-    return "/WEB-INF/views/filtrats.jsp";
+    return "/WEB-INF/views/Filtrats.jsp";
 
 }
 }

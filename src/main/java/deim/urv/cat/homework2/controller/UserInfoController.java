@@ -37,7 +37,7 @@ public class UserInfoController {
                     request.setAttribute("dni", user.getDni());
                     request.setAttribute("telf", user.getTelef());
 
-                    return "/WEB-INF/views/info-user.jsp"; // Redirigir a la vista de perfil
+                    return "/WEB-INF/views/layout/info-user.jsp"; // Redirigir a la vista de perfil
                 } else {
                     // Usuario no encontrado en la base de datos
                     request.setAttribute("error", "Usuario no encontrado.");
@@ -46,6 +46,6 @@ public class UserInfoController {
             }
         }
         // Redirigir al login si la sesión o el nombre de usuario no existen
-        return "redirect:/login";
+        return "redirect:/Login";
     }
 }

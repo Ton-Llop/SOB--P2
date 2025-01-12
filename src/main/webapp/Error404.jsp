@@ -43,7 +43,7 @@
                     </span>
 
                      <div class="card-body mx-auto">
-                        <a href="<c:url value="/Web/SignUp" />" class="btn btn-sm btn-info text-white"> Back To Home </a>
+                        <a href="<c:url value="/Web/Home" />" class="btn btn-sm btn-info text-white"> Back To Home </a>
                      </div>
                 </div>
             </div>

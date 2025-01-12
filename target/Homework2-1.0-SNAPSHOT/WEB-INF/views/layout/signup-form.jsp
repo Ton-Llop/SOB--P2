@@ -53,22 +53,11 @@
            </c:when>
        </c:choose>
 
-       <!-- Barra de búsqueda -->
-       <div class="header-search">
-           <form action="<c:url value='/search'/>" method="GET" class="search-form">
-               <input type="text" name="query" placeholder="Buscar artículos..." class="search-bar">
-               <button type="submit" class="search-button">🔍</button>
-           </form>
-       </div>
-
        <!-- Botons a la dreta -->
        <div class="header-buttons">
            <!-- Botó Filtrar -->
            <form action="<c:url value='/Web/filtrar'/>" method="GET">
                <button type="submit">Filtrar</button>
-           </form>
-           <form action="<c:url value='/Web/createArticle'/>" method="GET">
-               <button type="submit">Crear Articles</button>
            </form>
            <c:choose>
                <c:when test="${isLoggedIn}">
@@ -79,7 +68,7 @@
                </c:when>
                <c:otherwise>
                    <!-- Botons de login i registre -->
-                   <form action="<c:url value='/Web/login'/>" method="GET">
+                   <form action="<c:url value='/Web/Login'/>" method="GET">
                        <button type="submit">Iniciar Sessió</button>
                    </form>
                    <form action="<c:url value='/Web/SignUp'/>" method="GET">

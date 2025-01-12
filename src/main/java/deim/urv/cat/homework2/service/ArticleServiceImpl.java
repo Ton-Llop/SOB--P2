@@ -18,7 +18,7 @@ import java.util.Base64;
 
 public class ArticleServiceImpl implements ArticleService {
 
-    private static final String BASE_URL = "http://localhost:8080/api/article"; // Cambiar si es necesario
+    private static final String BASE_URL = "http://localhost:8080/Homework1/rest/api/v1/article";
     private final Client client;
 
     public ArticleServiceImpl() {
@@ -102,44 +102,26 @@ public List<Article> getByTopicAndUser(String authorId, String... topicsId) {
     }
 
     @Override
-    public int crearArticle(Article nou, String username, String encodedPassword) {
+public int crearArticle(Article nou, String username, String encodedPassword) {
     try {
-        Response response;
+        String credentials = username + ":" + encodedPassword;
+        String encodedCredentials = Base64.getEncoder().encodeToString(credentials.getBytes(StandardCharsets.UTF_8));
 
-        // Verifica si s'han proporcionat credencials
-        if (username != null && encodedPassword != null) {
-            // Combina el nom d'usuari i la contrasenya en format Basic Authentication
-            String credentials = username + ":" + encodedPassword;
-            String encodedCredentials = Base64.getEncoder().encodeToString(credentials.getBytes());
+        Response response = client.target("http://localhost:8080/Homework1/rest/api/v1/article")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, "Basic " + encodedCredentials)
+                .post(Entity.entity(nou, MediaType.APPLICATION_JSON));
 
-            // Envia la sol·licitud amb l'encapçalament Authorization
-            response = client.target(BASE_URL)
-                    .request(MediaType.APPLICATION_JSON)
-                    .header(HttpHeaders.AUTHORIZATION, "Basic " + encodedCredentials)
-                    .post(Entity.entity(nou, MediaType.APPLICATION_JSON));
-        } else {
-            // Envia la sol·licitud sense credencials
-            response = client.target(BASE_URL)
-                    .request(MediaType.APPLICATION_JSON)
-                    .post(Entity.entity(nou, MediaType.APPLICATION_JSON));
-        }
-
-        // Processa la resposta
         if (response.getStatus() == Response.Status.CREATED.getStatusCode()) {
-            // L'article s'ha creat correctament, retorna l'ID
-            int idArticle = response.readEntity(Integer.class);
-            System.out.println("Article creat amb ID: " + idArticle);
-            return idArticle;
+            return response.readEntity(Integer.class);
         } else {
-            // Mostra errors si la creació ha fallat
-            System.err.println("Error al crear article: " + response.getStatus());
-            System.err.println("Missatge del servidor: " + response.readEntity(String.class));
+            System.err.println("Error al crear artículo: " + response.getStatus());
+            System.err.println(response.readEntity(String.class));
         }
     } catch (Exception e) {
         e.printStackTrace();
     }
-
-    return 0; // Retorna 0 si alguna cosa ha fallat
+    return 0;
 }
 
 }

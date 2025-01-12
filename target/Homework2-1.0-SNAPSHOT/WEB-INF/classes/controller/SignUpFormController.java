@@ -3,9 +3,7 @@ package deim.urv.cat.homework2.controller;
 import deim.urv.cat.homework2.model.AlertMessage;
 import deim.urv.cat.homework2.model.SignUpAttempts;
 import deim.urv.cat.homework2.service.UserService;
-import deim.urv.cat.homework2.model.User;
 import deim.urv.cat.homework2.model.Usuari;
-
 import jakarta.inject.Inject;
 import jakarta.mvc.Controller;
 import jakarta.mvc.Models;
@@ -25,17 +23,15 @@ import java.util.logging.Logger;
 @Controller
 @Path("SignUp")
 public class SignUpFormController {    
-    // CDI
     @Inject BindingResult bindingResult;
     @Inject Logger log;
     @Inject UserService service;
     @Inject Models models;
-    @Inject AlertMessage flashMessage;
     @Inject SignUpAttempts attempts;
     
     @GET
     public String showForm() {
-        return "signup-form.jsp"; // Injects CRSF token
+        return "/WEB-INF/views/layout/signup-form.jsp"; // Muestra el formulario
     }    
     
     @POST
@@ -43,33 +39,39 @@ public class SignUpFormController {
     @CsrfProtected
     public String signUp(@Valid @BeanParam UserForm userForm) {
         models.put("user", userForm);
+
+        // Validación de datos
         if (bindingResult.isFailed()) {
             AlertMessage alert = AlertMessage.danger("Validation failed!");
-            bindingResult.getAllErrors()
-                    .stream()
-                    .forEach((ParamError t) -> {
-                        alert.addError(t.getParamName(), "", t.getMessage());
-                    });
+            bindingResult.getAllErrors().forEach((ParamError t) -> 
+                alert.addError(t.getParamName(), "", t.getMessage())
+            );
             log.log(Level.WARNING, "Data binding for signupFormController failed.");
             models.put("errors", alert);
-            return "signup-form.jsp";
+            return "/WEB-INF/views/layout/signup-form.jsp";
         }
         
-        if(attempts.hasExceededMaxAttempts()) {
-            return "signup-form.jsp";
+        // Validación de intentos fallidos
+        if (attempts.hasExceededMaxAttempts()) {
+            models.put("message", "Has excedido el número máximo de intentos. Por favor, inténtalo más tarde.");
+            return "/WEB-INF/views/layout/signup-form.jsp";
         }
-       
-        Usuari user = service.findUserByEmail(userForm.getEmail());
+
+        // Validar si el usuario ya existe
+        Usuari user = service.findUserByEmail(userForm.getUsername()); 
         if (user != null) {
-            // Try again
-            log.log(Level.WARNING, "A user with this e-mail address {0} already exists.", userForm.getEmail());
-            models.put("message", "A user with this e-mail address already exists!");
+            log.log(Level.WARNING, "A user with this username {0} already exists.", userForm.getUsername());
+            models.put("message", "El nombre de usuario ya está registrado. Intenta con otro.");
             attempts.increment();
-            return "signup-form.jsp";
+            return "/WEB-INF/views/layout/signup-form.jsp";
         }
-        log.log(Level.INFO, "Redirecting to the success page.");
+
+        // Registro exitoso
+        log.log(Level.INFO, "Registro exitoso para el usuario: {0}", userForm.getUsername());
         service.addUser(userForm);
-        attempts.reset();
-        return "signup-success.jsp";
+        attempts.reset(); // Reinicia intentos
+
+        // Redirigir a la página de éxito o perfil del usuario
+        return "redirect:/Web/userInfo"; // Redirige al controlador UserInfoController
     } 
 }

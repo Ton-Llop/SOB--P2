@@ -7,13 +7,15 @@ import jakarta.mvc.Models;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.ws.rs.BeanParam;
+import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.core.Context;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Controller
-@Path("Login")
+@Path("/Login")
 public class LoginController {
 
     @Inject
@@ -25,33 +27,38 @@ public class LoginController {
     @Inject
     private Models models;
 
+    @GET
+    public String showLoginForm() {
+        // Retorna el formulari de login
+        return "/WEB-INF/views/layout/login-form.jsp";
+    }
+
     @POST
-    public String login(@BeanParam LoginForm loginForm, @jakarta.ws.rs.core.Context HttpServletRequest request) {
+    public String login(@BeanParam LoginForm loginForm, @Context HttpServletRequest request) {
         try {
-            
-            boolean loginSuccessful = userService.loginCorrecte(loginForm.getEmail(), loginForm.getPassword());
+            // Comprobar las credenciales utilizando UserService
+            boolean loginSuccessful = userService.loginCorrecte(loginForm.getId(), loginForm.getPassword());
 
             if (loginSuccessful) {
-                // Crea una sessió per a l'usuari autenticat
+                // Crear una sesión para el usuario autenticado
                 HttpSession session = request.getSession(true);
-                session.setAttribute("username", loginForm.getEmail());
+                session.setAttribute("username", loginForm.getId());
 
-                log.log(Level.INFO, "Login correcte per a l'usuari: {0}", loginForm.getEmail());
+                log.log(Level.INFO, "Login correcte per a l'usuari: {0}", loginForm.getId());
 
-                // Missatge de benvinguda
-                models.put("message", "Benvingut de nou, " + loginForm.getEmail() + "!");
-                return "redirect:/articles"; // Redirigeix al llistat d'articles
+                // Redirigir a la página de artículos tras un login exitoso
+                return "redirect:/Home";
             } else {
-                // Credencials incorrectes
-                log.log(Level.WARNING, "Login fallit per a l'usuari: {0}", loginForm.getEmail());
+                // Credenciales incorrectas
+                log.log(Level.WARNING, "Login fallit per a l'usuari: {0}", loginForm.getId());
                 models.put("error", "Usuari o contrasenya incorrectes. Torna-ho a intentar.");
-                return "login-form.jsp"; // Mostra el formulari amb un error
+                return "/WEB-INF/views/layout/login-form.jsp";
             }
         } catch (Exception e) {
-            // Error inesperat durant el procés d'inici de sessió
+            // Manejar errores inesperados
             log.log(Level.SEVERE, "Error durant el procés de login", e);
             models.put("error", "S'ha produït un error inesperat. Torna-ho a intentar més tard.");
-            return "login-form.jsp"; // Mostra un missatge genèric d'error
+            return "/WEB-INF/views/layout/login-form.jsp";
         }
     }
 }

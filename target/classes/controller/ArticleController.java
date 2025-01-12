@@ -44,4 +44,4 @@ public class ArticleController {
         return "article-detail.jsp";
     }
 }
-
+    

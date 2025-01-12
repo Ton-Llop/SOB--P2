@@ -1,27 +1,31 @@
 package deim.urv.cat.homework2.controller;
 
-import jakarta.ws.rs.FormParam;
-import jakarta.validation.constraints.Email;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Named;
+import jakarta.mvc.binding.MvcBinding;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.ws.rs.FormParam;
 
+@Named("loginForm")
+@RequestScoped
 public class LoginForm {
 
-    @FormParam("email")
-    @Email(message = "Please enter a valid email address.")
-    @NotBlank(message = "Email cannot be blank.")
-    private String email;
+    @NotBlank(message = "El camp ID no pot estar buit.")
+    @FormParam("id")
+    @MvcBinding
+    private String id;
 
+    @NotBlank(message = "El camp Contrasenya no pot estar buit.")
     @FormParam("password")
-    @NotBlank(message = "Password cannot be blank.")
+    @MvcBinding
     private String password;
 
-    // Getters y Setters
-    public String getEmail() {
-        return email;
+    public String getId() {
+        return id;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getPassword() {

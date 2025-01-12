@@ -53,7 +53,7 @@
 <body>
     <main class="container">
         <h1>Filtrar Articles</h1>
-        <form action="<c:url value='/filtrar'/>" method="POST">
+        <form action="<c:url value='/Web/Filtrar'/>" method="POST">
             <!-- Llista desplegable per filtrar per autor -->
             <label for="autor">Selecciona un autor:</label>
             <select name="autor" id="autor">

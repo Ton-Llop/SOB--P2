@@ -6,9 +6,9 @@ import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.client.Invocation;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.List;
 
@@ -90,27 +90,38 @@ public class UserServiceImpl implements UserService {
         return false;
     }
 
-    @Override
+
     public boolean loginCorrecte(String username, String password) {
         try {
+            // Construir la URL del endpoint
+            String url = "http://localhost:8080/Homework1/rest/api/v1/user/LoginVerification";
+
+            // Crear el header Authorization con credenciales codificadas
             String credentials = username + ":" + password;
-            String encodedCredentials = Base64.getEncoder().encodeToString(credentials.getBytes(StandardCharsets.UTF_8));
+            String encodedCredentials = Base64.getEncoder().encodeToString(credentials.getBytes());
 
-            Response response = webTarget.path("/LoginVerification")
-                    .request(MediaType.APPLICATION_JSON)
-                    .header("Authorization", "Basic " + encodedCredentials)
-                    .get();
+            // Crear el target y la solicitud
+            WebTarget target = client.target(url);
+            Invocation.Builder invocationBuilder = target.request();
+            invocationBuilder.header("Authorization", "Basic " + encodedCredentials);
 
-            if (response.getStatus() == 200) {
+            // Ejecutar la solicitud GET
+            Response response = invocationBuilder.get();
+
+            // Comprobar el estado de la respuesta
+            if (response.getStatus() == Response.Status.OK.getStatusCode()) {
                 System.out.println("Credenciales correctas.");
                 return true;
             } else {
                 System.err.println("Error de credenciales: " + response.getStatus());
+                return false;
             }
         } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
-        return false;
     }
+
 
     @Override
     public boolean addUser(UserForm user) {
@@ -141,4 +152,5 @@ public class UserServiceImpl implements UserService {
         }
         return null;
     }
+
 }
