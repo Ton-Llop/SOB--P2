@@ -112,4 +112,12 @@ public class Usuari implements Serializable {
     public String toString() {
         return "model.entities.User[ id=" + id + ", username=" + username + " ]";
     }
+
+    public Object getDni() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    public Object getTelef() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }

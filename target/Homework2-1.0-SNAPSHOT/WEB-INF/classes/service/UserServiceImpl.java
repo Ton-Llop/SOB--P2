@@ -54,6 +54,24 @@ public class UserServiceImpl implements UserService {
         }
         return null;
     }
+    
+    public Usuari findUserByUsername(String username) {
+        try {
+            Response response = webTarget.path("/username")
+                    .queryParam("username", username)
+                    .request(MediaType.APPLICATION_JSON)
+                    .get();
+            
+            if (response.getStatus() == 200) {
+                return response.readEntity(Usuari.class);
+            } else {
+                System.err.println("Error al buscar usuario por nombre de usuario: " + response.getStatus());
+            }
+        } catch (Exception e) {
+               System.err.println("Error al buscar usuario: " + e.getMessage());
+        }
+        return null; 
+    }
 
     @Override
     public boolean updateUser(long id, Usuari user) {

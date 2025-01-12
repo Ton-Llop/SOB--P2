@@ -11,6 +11,7 @@ deim\urv\cat\homework2\controller\SignUpFormController.class
 deim\urv\cat\homework2\service\UserServiceImpl$1.class
 deim\urv\cat\homework2\service\ArticleServiceImpl.class
 deim\urv\cat\homework2\controller\ArticleController.class
+deim\urv\cat\homework2\controller\UserInfoController.class
 deim\urv\cat\homework2\Property.class
 deim\urv\cat\homework2\service\ArticleServiceImpl$1.class
 deim\urv\cat\homework2\controller\LogoutController.class

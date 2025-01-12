@@ -5,6 +5,7 @@ import jakarta.inject.Named;
 import jakarta.mvc.binding.MvcBinding;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import jakarta.ws.rs.FormParam;
 import java.io.Serializable;
@@ -34,6 +35,16 @@ public class UserForm implements Serializable {
     @MvcBinding
     private String email;
     
+    @NotBlank
+    @FormParam("dni")
+    @MvcBinding
+    @Pattern(regexp = "\\d{8}[A-Za-z]", message = "DNI must have 8 digits followed by a letter")
+    private String dni;
+    
+    @FormParam("telef")
+    @MvcBinding
+    private int telef;
+    
     public String getFirstName() {
         return fixNull(this.firstName);
     }
@@ -57,7 +68,22 @@ public class UserForm implements Serializable {
     public void setEmail(String email) {
         this.email = email;
     }
+    
+    public String getDni() {
+        return fixNull(this.dni);
+    }
 
+    public void setDni(String dni) {
+        this.dni = dni;
+    }
+
+    public int getTelef() {
+        return this.telef;
+    }
+
+    public void setTelef(int telef) {
+        this.telef = telef;
+    }
     private String fixNull(String in) {
         return (in == null) ? "" : in;
     }
