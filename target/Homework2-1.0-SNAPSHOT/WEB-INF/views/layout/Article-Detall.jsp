@@ -18,7 +18,7 @@
         <p>${article.content}</p>
 
         <!-- Botón para volver al listado de artículos -->
-        <a href="<c:url value='/articles'/>" class="back-button">Torna al llistat d'articles</a>
+        <a href="<c:url value='Web/Articles'/>" class="back-button">Torna al llistat d'articles</a>
     </main>
 </body>
 </html>

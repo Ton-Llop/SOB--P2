@@ -23,6 +23,7 @@ deim\urv\cat\homework2\controller\SignUpSuccessController.class
 deim\urv\cat\homework2\service\ArticleServiceImpl$2.class
 deim\urv\cat\homework2\model\AlertMessage$Type.class
 deim\urv\cat\homework2\service\UserServiceImpl.class
+deim\urv\cat\homework2\controller\ArticlesController.class
 deim\urv\cat\homework2\model\SignUpAttempts.class
 deim\urv\cat\homework2\controller\LoginController.class
 deim\urv\cat\homework2\controller\LoginForm.class

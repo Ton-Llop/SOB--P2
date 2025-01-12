@@ -122,6 +122,24 @@
             color: white;
             margin-top: 20px;
         }
+
+        .button-large {
+            display: block;
+            margin: 20px auto;
+            padding: 15px 30px;
+            font-size: 18px;
+            color: white;
+            background-color: #007bff;
+            border: none;
+            border-radius: 8px;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .button-large:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
@@ -170,16 +188,7 @@
     <!-- Contenedor Principal -->
     <main class="container">
         <h1>Articles</h1>
-        <div class="article-container">
-            <c:forEach items="${articles}" var="article">
-                <div class="article">
-                    <h2>${article.title}</h2>
-                    <p><strong>Autor:</strong> ${article.author.username}</p>
-                    <p><strong>Resum:</strong> ${article.summary}</p>
-                    <p><strong>Data:</strong> ${article.publicationDate}</p>
-                </div>
-            </c:forEach>
-        </div>
+        <a href="<c:url value='/Web/Articles'/>" class="button-large">Veure Articles</a>
     </main>
 
     <!-- Peu de pàgina -->

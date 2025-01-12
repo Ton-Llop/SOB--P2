@@ -14,6 +14,7 @@ import jakarta.ws.rs.core.Response;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.Collections;
 
 
 public class ArticleServiceImpl implements ArticleService {
@@ -65,22 +66,28 @@ public List<Article> getByTopicAndUser(String authorId, String... topicsId) {
 
     @Override
     public List<Article> getAllArticle() {
-        try {
-            Response response = client.target(BASE_URL)
-                .request(MediaType.APPLICATION_JSON)
-                .get();
+    try {
+        // Realizar la solicitud GET al backend del Homework1
+        Response response = client.target("http://localhost:8080/Homework1/rest/api/v1/article")
+                                  .request(MediaType.APPLICATION_JSON)
+                                  .get();
 
-            if (response.getStatus() == Response.Status.OK.getStatusCode()) {
-                return response.readEntity(new GenericType<List<Article>>() {});
-            } else {
-                System.err.println("Error al obtener todos los artículos: " + response.getStatusInfo());
-                return new ArrayList<>();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ArrayList<>();
+        // Verificar si la respuesta es exitosa
+        if (response.getStatus() == Response.Status.OK.getStatusCode()) {
+            // Leer los artículos desde el cuerpo de la respuesta
+            return response.readEntity(new GenericType<List<Article>>() {});
+        } else {
+            // Manejar errores del servidor o solicitudes incorrectas
+            System.err.println("Error al obtener los artículos: " + response.getStatus() + " - " + response.readEntity(String.class));
+            return Collections.emptyList(); // Retornar una lista vacía si falla
         }
+    } catch (Exception e) {
+        // Capturar cualquier excepción inesperada y registrar el error
+        e.printStackTrace();
+        return Collections.emptyList(); // Retornar una lista vacía si ocurre un error
     }
+}
+    
 
     @Override
     public Article getArticleById(int id) {
