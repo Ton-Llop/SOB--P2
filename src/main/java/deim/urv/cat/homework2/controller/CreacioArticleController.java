@@ -17,14 +17,11 @@ import java.util.Arrays;
 import java.util.List;
 
 @Controller
-@Path("/article/create")
+@Path("article/create")
 public class CreacioArticleController {
 
     @Inject
     private ArticleServiceImpl articleService;
-
-    @Inject
-    private UserServiceImpl userService;
 
     @Inject
     private Models models;
@@ -37,58 +34,49 @@ public class CreacioArticleController {
         // Comprovar si l'usuari ha iniciat sessió
         HttpSession session = request.getSession(false); // No crear una nova sessió si no existeix
         if (session != null && session.getAttribute("username") != null) {
-            // Usuari loggejat
             models.put("isLoggedIn", true);
             models.put("username", session.getAttribute("username"));
         } else {
-            // Usuari no loggejat
             models.put("isLoggedIn", false);
         }
         return "/WEB-INF/views/layout/CreacioArticle.jsp";
     }
 
     @POST
-public String saveArticle(@FormParam("title") String title,
-                          @FormParam("content") String content,
-                          @FormParam("topics") String topics,
-                          @FormParam("isPrivate") String isPrivate,
-                          @FormParam("image") String image,
-                          @Context HttpServletRequest request) {
+    public String saveArticle(
+        @FormParam("title") String title,
+        @FormParam("content") String content,
+        @FormParam("topics") String topics,
+        @FormParam("isPrivate") String isPrivate,
+        @FormParam("image") String image
+    ) {
+        try {
+            // Obtener datos de sesión
+            HttpSession session = request.getSession(false);
+            String username = (String) session.getAttribute("username");
+            String password = (String) session.getAttribute("password");
 
-    try {
-        // Recoge las credenciales del usuario autenticado
-        String username = (String) request.getSession().getAttribute("username");
-        String password = (String) request.getSession().getAttribute("password");
+            // Crear el artículo
+            Article newArticle = new Article();
+            newArticle.setTitle(title);
+            newArticle.setContent(content);
+            newArticle.setImage(image);
+            newArticle.setIsPrivate(Boolean.parseBoolean(isPrivate));
+            newArticle.setTopics(List.of(topics.split(",")));
 
-        // Convierte el campo 'isPrivate' a booleano
-        boolean privateStatus = Boolean.parseBoolean(isPrivate);
-
-        // Crea una lista de tópicos
-        List<String> topicList = Arrays.asList(topics.split(","));
-
-        // Crea un objeto 'Article'
-        Article newArticle = new Article();
-        newArticle.setTitle(title);
-        newArticle.setContent(content);
-        newArticle.setTopics(topicList);
-        newArticle.setIsPrivate(privateStatus);
-        newArticle.setImage(image);
-
-        // Llama al servicio para guardar el artículo
-        int articleId = articleService.crearArticle(newArticle, username, password);
-
-        if (articleId > 0) {
-            // Si se crea correctamente, redirige a 'article-details.jsp'
-            return "redirect:/Web/article?id=" + articleId;
-        } else {
-            models.put("errorMessage", "No se pudo crear el artículo. Inténtalo nuevamente.");
+            int articleId = articleService.crearArticle(newArticle, username, password);
+            if (articleId > 0) {
+                models.put("successMessage", "Article creat correctament amb ID: " + articleId);
+                return "redirect:/Web/Articles"; // Redirigir a la página de artículos
+            } else {
+                models.put("errorMessage", "No s'ha pogut crear l'article.");
+                return "/WEB-INF/views/layout/CreacioArticle.jsp";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            models.put("errorMessage", "S'ha produït un error al crear l'article.");
             return "/WEB-INF/views/layout/CreacioArticle.jsp";
         }
-    } catch (Exception e) {
-        e.printStackTrace();
-        models.put("errorMessage", "Ocurrió un error inesperado.");
-        return "/WEB-INF/views/layout/CreacioArticle.jsp";
     }
 }
 
-}

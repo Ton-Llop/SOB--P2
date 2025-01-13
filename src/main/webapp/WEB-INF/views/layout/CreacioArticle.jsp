@@ -83,6 +83,18 @@
     <main class="container">
         <h1>Crear Nou Article</h1>
 
+        <!-- Mensajes de error o éxito -->
+        <c:if test="${not empty errorMessage}">
+            <div style="color: red; margin-bottom: 10px;">
+                ${errorMessage}
+            </div>
+        </c:if>
+        <c:if test="${not empty successMessage}">
+            <div style="color: green; margin-bottom: 10px;">
+                ${successMessage}
+            </div>
+        </c:if>
+
         <!-- Formulario centrado -->
         <form action="<c:url value='/Web/article/create'/>" method="POST" class="form-container">
             <div class="form-group">
@@ -111,7 +123,7 @@
 
             <!-- Contenedor para los botones -->
             <div class="button-container">
-                <button type="button" class="back-button" onclick="window.location.href='<c:url value='/Web/Home'/>"'>Cancelar</button>
+                <button type="button" class="back-button" onclick="window.location.href='<c:url value="/Web/Home"/>'">Cancelar</button>
                 <button type="submit">Crear Article</button>
             </div>
         </form>
