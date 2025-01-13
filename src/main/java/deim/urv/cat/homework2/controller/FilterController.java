@@ -40,7 +40,7 @@ public class FilterController {
         } else {
             models.put("isLoggedIn", false);
         }
-        return "/WEB-INF/views/Filter.jsp";
+        return "/WEB-INF/views/layout/Filter.jsp";
     }
 
     @POST
@@ -70,7 +70,7 @@ public String filterArticles(@FormParam("autor") String author,
         models.put("isLoggedIn", false);
     }
 
-    return "/WEB-INF/views/Filtrats.jsp";
+    return "/WEB-INF/views/layout/Filtrats.jsp";
 
 }
 }

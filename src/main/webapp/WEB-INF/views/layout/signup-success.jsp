@@ -1,43 +1,63 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<!DOCTYPE html>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" isELIgnored="false" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
-<title>Sign Up Success - SOB</title>
-<link href="<c:url value="/resources/css/bootstrap.min.css" />"
-	rel="stylesheet">
-<script src="<c:url value="/resources/js/jquery-1.11.1.min.js" />"></script>
-<script src="<c:url value="/resources/js/bootstrap.min.js" />"></script>
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Registro Exitoso - Homework2</title>
+    <link rel="stylesheet" type="text/css" href="<c:url value='/resources/css/estilPrincipal.css'/>">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .message-container {
+            text-align: center;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #e0ffe0;
+            border: 1px solid #a3d4a3;
+            border-radius: 8px;
+            color: #007bff;
+            font-size: 20px;
+        }
+    </style>
 </head>
 <body>
-	<div class="container">
-		<div class="col-md-offset-2 col-md-7">
-                        <div class="text-center">
-                            <img class="mb-4" src="<c:url value="/resources/img/ETSEcentrat.png" />" alt="" width="134" height="92" />
-                        </div>
-			<h1>Thanks for signing up!</h1>
-			<hr />
-                        <p class="text-md-start">
-                            We'll keep you posted on the latest news, product updates and exam tips for
-                            the SOB course!
-                        </p>
-			<table class="table table-striped table-bordered">
-				<tr>
-					<td><b>First Name </b>: ${user.firstName}</td>
-				</tr>
-				<tr>
-					<td><b>Last Name </b>: ${user.lastName}</td>
-				</tr>
-				<tr>
-					<td><b>Email </b>: ${user.email}</td>
-				</tr>
-			</table>
-                        <a class="btn btn-sm btn-info text-white" href="<c:url value="/Web/SignUp" />">Go Back</a>
-		</div>
-	</div>
-        <jsp:include page="/WEB-INF/views/layout/footer.jsp" />
+    <!-- Cabecera -->
+    <header class="header">
+        <div class="header-content">
+            <!-- Mensaje de bienvenida -->
+            <div class="welcome-container">
+                Benvingut, <strong>${username}</strong>! El teu registre ha estat satisfactori.
+            </div>
+
+            <!-- Botones -->
+            <div class="header-buttons">
+                <form action="<c:url value='/Web/Home'/>" method="GET">
+                    <button type="submit">Anar al Home</button>
+                </form>
+                <form action="<c:url value='/Web/Logout'/>" method="GET">
+                    <button type="submit">Tancar Sessió</button>
+                </form>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contenido principal -->
+    <main class="container">
+        <div class="message-container">
+            <p>Gràcies per registrar-te, <strong>${username}</strong>! Ja pots començar a navegar i crear articles.</p>
+        </div>
+        <h1>Articles</h1>
+        <a href="<c:url value='/Web/Articles'/>" class="button-large">Veure Articles</a>
+    </main>
+
+    <!-- Pie de página -->
+    <footer class="footer">
+        Homework2 - Tots els drets reservats al grup de SOB56 &copy; 2025
+    </footer>
 </body>
 </html>

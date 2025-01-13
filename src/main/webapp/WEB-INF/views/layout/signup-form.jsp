@@ -56,7 +56,7 @@
        <!-- Botons a la dreta -->
        <div class="header-buttons">
            <!-- Botó Filtrar -->
-           <form action="<c:url value='/Web/filtrar'/>" method="GET">
+           <form action="<c:url value='/Web/Filtrar'/>" method="GET">
                <button type="submit">Filtrar</button>
            </form>
            <c:choose>

@@ -69,28 +69,19 @@
             margin-bottom: 20px;
         }
     </style>
+<head>
+    <title>Información del Usuario</title>
 </head>
 <body>
-    <div class="container">
-        <h1>Perfil del Usuario</h1>
+    <h1>Bienvenido, ${username}</h1>
+    <p>Nombre: ${name}</p>
+    <p>Email: ${email}</p>
+    <p>DNI: ${dni}</p>
+    <p>Teléfono: ${telf}</p>
 
-        <c:if test="${not empty error}">
-            <div class="error">
-                <p>${error}</p>
-            </div>
-        </c:if>
-
-        <ul class="user-info">
-            <li><strong>Nombre de Usuario:</strong> ${username}</li>
-            <li><strong>Nombre:</strong> ${name}</li>
-            <li><strong>Email:</strong> ${email}</li>
-            <li><strong>DNI:</strong> ${dni}</li>
-            <li><strong>Teléfono:</strong> ${telf}</li>
-        </ul>
-
-        <div class="btn-container">
-            <a href="<c:url value='/Web/Home' />">Volver al Inicio</a>
-        </div>
-    </div>
+    <!-- Botón para regresar al Home -->
+    <form action="/Home" method="get">
+        <button type="submit">Ir al Home</button>
+    </form>
 </body>
 </html>
