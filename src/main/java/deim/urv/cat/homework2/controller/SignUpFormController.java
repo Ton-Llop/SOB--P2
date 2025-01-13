@@ -72,6 +72,6 @@ public class SignUpFormController {
         attempts.reset(); // Reinicia intentos
 
         // Redirigir a la página de éxito o perfil del usuario
-        return "redirect:/Web/userInfo"; // Redirige al controlador UserInfoController
+        return "redirect: /WEB-INF/views/layout/info-user.jsp"; // Redirige al controlador UserInfoController
     } 
 }
