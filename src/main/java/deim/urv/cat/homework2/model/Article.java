@@ -15,6 +15,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.json.bind.annotation.JsonbTransient;
 
 
+
 @Entity
 @XmlRootElement
 public class Article implements Serializable {

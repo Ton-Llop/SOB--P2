@@ -26,33 +26,40 @@ public class ArticlesController {
     private HttpServletRequest request;
 
     @GET
-    public String showArticles() {
-        try {
-            // Obtener artículos desde el servicio
-            List<Article> articles = articleService.getAllArticle();
+public String showArticles() {
+    try {
+        // Llamada al servicio
+        List<Article> articles = articleService.getArticles();
+        System.out.println("Articles del from service: " + articles);
 
-            // Si no hay artículos, mostrar un mensaje
-            if (articles == null || articles.isEmpty()) {
-                models.put("message", "No hi ha articuls disponibles.");
-            } else {
-                models.put("articles", articles);
-            }
-
-            // Comprobar si el usuario está logueado
-            HttpSession session = request.getSession(false); 
-            if (session != null && session.getAttribute("username") != null) {
-                models.put("isLoggedIn", true);
-                models.put("username", session.getAttribute("username"));
-            } else {
-                models.put("isLoggedIn", false);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            models.put("errorMessage", "Error.");
+        // Validación de artículos
+        if (articles == null || articles.isEmpty()) {
+            System.out.println("No articles .");
+            models.put("message", "No hi ha articles disponibles.");
+        } else {
+            System.out.println("Articles retrieved: " + articles);
+            models.put("articles", articles);
         }
 
-        // Redirigir al JSP de artículos
-        return "/WEB-INF/views/layout/Articles.jsp";
+        // Verifica el estado de sesión
+        HttpSession session = request.getSession(false);
+        if (session != null && session.getAttribute("username") != null) {
+            models.put("isLoggedIn", true);
+            models.put("username", session.getAttribute("username"));
+        } else {
+            models.put("isLoggedIn", false);
+        }
+
+    } catch (Exception e) {
+        // Manejo de errores
+        e.printStackTrace(); // Cambiar por un sistema de logs en producción
+        models.put("errorMessage", "Error obtenint els articles.");
     }
+
+    // Retorno de la vista
+    return "/WEB-INF/views/layout/Articles.jsp";
+}
+
+
+
 }

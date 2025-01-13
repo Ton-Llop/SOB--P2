@@ -65,28 +65,43 @@ public List<Article> getByTopicAndUser(String authorId, String... topicsId) {
 
 
     @Override
-    public List<Article> getAllArticle() {
+public List<Article> getArticles() {
     try {
-        // Realizar la solicitud GET al backend del Homework1
-        Response response = client.target("http://localhost:8080/Homework1/rest/api/v1/article")
+        // Configura el cliente REST
+        Client client = ClientBuilder.newClient();
+
+        // Especifica la URI completa de tu backend
+        String backendUri = "http://localhost:8080/Homework2/rest/api/v1/article";
+        System.out.println("Realizando llamada REST al servidor en: " + backendUri);
+
+        // Realiza la solicitud GET
+        Response response = client.target(backendUri)
                                   .request(MediaType.APPLICATION_JSON)
                                   .get();
 
-        // Verificar si la respuesta es exitosa
+        // Imprime el estado de la respuesta
+        System.out.println("Código de estado de la respuesta: " + response.getStatus());
+
         if (response.getStatus() == Response.Status.OK.getStatusCode()) {
-            // Leer los artículos desde el cuerpo de la respuesta
-            return response.readEntity(new GenericType<List<Article>>() {});
+            // Convierte el JSON de la respuesta en una lista de objetos Article
+            List<Article> articles = response.readEntity(new jakarta.ws.rs.core.GenericType<List<Article>>() {});
+            System.out.println("Artículos recuperados: " + articles);
+            return articles;
         } else {
-            // Manejar errores del servidor o solicitudes incorrectas
-            System.err.println("Error al obtener los artículos: " + response.getStatus() + " - " + response.readEntity(String.class));
-            return Collections.emptyList(); // Retornar una lista vacía si falla
+            // Manejo de errores si el estado no es 200
+            System.err.println("Error al realizar la llamada: Código de respuesta = " + response.getStatus());
         }
     } catch (Exception e) {
-        // Capturar cualquier excepción inesperada y registrar el error
+        // Captura y maneja excepciones
         e.printStackTrace();
-        return Collections.emptyList(); // Retornar una lista vacía si ocurre un error
     }
+
+    // Devuelve null si hubo un error
+    return null;
 }
+
+
+
     
 
     @Override
@@ -109,7 +124,7 @@ public List<Article> getByTopicAndUser(String authorId, String... topicsId) {
     }
 
     @Override
-public int crearArticle(Article nou, String username, String encodedPassword) {
+    public int crearArticle(Article nou, String username, String encodedPassword) {
     try {
         String credentials = username + ":" + encodedPassword;
         String encodedCredentials = Base64.getEncoder().encodeToString(credentials.getBytes(StandardCharsets.UTF_8));
@@ -130,5 +145,4 @@ public int crearArticle(Article nou, String username, String encodedPassword) {
     }
     return 0;
 }
-
 }

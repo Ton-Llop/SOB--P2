@@ -36,7 +36,7 @@ public class HomeController {
         }
 
         // Obtener los artículos desde el servicio
-        List<Article> articles = articleService.getAllArticle();
+        List<Article> articles = articleService.getArticles();
         models.put("articles", articles);
 
         return "/WEB-INF/views/layout/Home.jsp";

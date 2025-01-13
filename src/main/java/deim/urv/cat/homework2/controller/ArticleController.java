@@ -30,18 +30,18 @@ public class ArticleController {
         Article article = articleService.getArticleById(id);
         if (article == null) {
             models.put("error", "L'article no existeix.");
-            return "error.jsp";
+            return "Error404.jsp";
         }
 
         // Si l'article és privat i l'usuari no està autenticat
         if (article.getIsPrivate() && !isAuthenticated) {
             models.put("error", "Aquest article és privat. Necessites iniciar sessió per accedir-hi.");
-            return "login-form.jsp"; // Redirigir al login
+            return "/WEB-INF/views/layout/login-form.jsp"; // Redirigir al login
         }
 
         // Afegir l'article al model per mostrar-lo a la vista
         models.put("article", article);
-        return "article-detail.jsp";
+        return "/WEB-INF/views/layout/article-detail.jsp";
     }
 }
     
