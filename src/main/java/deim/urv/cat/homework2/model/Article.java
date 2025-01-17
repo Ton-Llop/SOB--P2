@@ -1,4 +1,5 @@
 package deim.urv.cat.homework2.model;
+
 import jakarta.persistence.Column;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -8,13 +9,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.ElementCollection;
 import jakarta.xml.bind.annotation.XmlRootElement;
-import jakarta.json.bind.annotation.JsonbTransient;
-
-
+import java.util.Map;
 
 @Entity
 @XmlRootElement
@@ -22,25 +19,23 @@ public class Article implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @SequenceGenerator(name = "Article_Gen", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "Article_Gen")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    private String title; // Títol de l'article
-    private String content; // Contingut complet de l'article
-    
-    private Boolean isPrivate = false; //
-
-    private LocalDateTime publicationDate; // Data de publicació
-    private int views; // Nombre de visualitzacions
+    private String title; 
+    private String content; 
+    private Boolean isPrivate; 
+    private LocalDateTime publicationDate; 
+    private int views; 
+    private String image; 
 
     @ManyToOne
-    private Usuari author; // L'autor de l'article
+    private Usuari author; 
 
     @ElementCollection
-    private List<String> topics; // Llista de tòpics associats a l'article
+    private List<String> topics; 
 
-    // Getters i Setters
+    // Getters y Setters
     public Long getId() {
         return id;
     }
@@ -64,15 +59,14 @@ public class Article implements Serializable {
     public void setContent(String content) {
         this.content = content;
     }
-    
+
     public Boolean getIsPrivate() {
         return isPrivate;
     }
 
     public void setIsPrivate(Boolean isPrivate) {
-    this.isPrivate = isPrivate;
-}
-
+        this.isPrivate = isPrivate;
+    }
 
     public LocalDateTime getPublicationDate() {
         return publicationDate;
@@ -89,8 +83,15 @@ public class Article implements Serializable {
     public void setViews(int views) {
         this.views = views;
     }
-    
-    @JsonbTransient
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
     public Usuari getAuthor() {
         return author;
     }
@@ -106,37 +107,32 @@ public class Article implements Serializable {
     public void setTopics(List<String> topics) {
         this.topics = topics;
     }
+    
+    public static Article fromMap(Map<String, Object> data) {
+    Article article = new Article();
+    article.setTitle((String) data.get("titol"));
+    article.setContent((String) data.get("descripcio"));
+    article.setViews(((Number) data.get("nViews")).intValue());
+    article.setPublicationDate(LocalDateTime.parse((String) data.get("dataPubli")));
+    article.setTopics((List<String>) data.get("topics"));
+    article.setImage((String) data.get("imatge"));
 
-    // hashCode, equals i toString
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
+    String authorUsername = (String) data.get("nomAut");
+    if (authorUsername != null) {
+        Usuari author = new Usuari();
+        author.setUsername(authorUsername);
+        article.setAuthor(author);
     }
-
-    @Override
-    public boolean equals(Object object) {
-        if (!(object instanceof Article)) {
-            return false;
-        }
-        Article other = (Article) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
-    }
+    return article;
+}
 
     @Override
     public String toString() {
-        return "Article[ title=" + title + ", author=" + (author != null ? author.getUsername() : "unknown") + " ]";
-    }
-
-    public void setImatge(String imatge) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    public void setImage(String image) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return "Article{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", author=" + (author != null ? author.getUsername() : "unknown") +
+                '}';
     }
 }

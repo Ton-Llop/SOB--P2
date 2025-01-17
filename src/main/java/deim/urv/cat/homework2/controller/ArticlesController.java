@@ -26,7 +26,7 @@ public class ArticlesController {
     private HttpServletRequest request;
 
     @GET
-public String showArticles() {
+    public String showArticles() {
     try {
         // Llamada al servicio
         List<Article> articles = articleService.getArticles();

@@ -37,52 +37,30 @@
         <h1>Llistat d'Articles</h1>
     </header>
     <main>
-        <!-- Mostrar missatge si no hi ha articles -->
         <c:if test="${not empty message}">
             <p>${message}</p>
         </c:if>
-
-        <!-- Mostrar missatge d'error si existeix -->
         <c:if test="${not empty errorMessage}">
             <p class="error-message">${errorMessage}</p>
         </c:if>
-
-        <!-- Mostrar llistat d'articles -->
         <c:if test="${not empty articles}">
             <div class="article-container">
                 <c:forEach items="${articles}" var="article">
                     <div class="article">
-                        <!-- Títol -->
                         <h2>${article.title}</h2>
-
-                        <!-- Autor -->
-                        <p><strong>Autor:</strong> ${article.author}</p>
-
-                        <!-- Descripció -->
+                        <p><strong>Autor:</strong> ${article.author.username}</p>
                         <p><strong>Descripció:</strong> ${article.content}</p>
-
-                        <!-- Data de publicació -->
-                        <p><strong>Data de publicació:</strong> 
-                            <c:out value="${article.publicationDate}" />
-                        </p>
-
-                        <!-- Visualitzacions -->
+                        <p><strong>Data de publicació:</strong> ${article.publicationDate}</p>
                         <p><strong>Visualitzacions:</strong> ${article.views}</p>
-
-                        <!-- Tòpics -->
                         <p><strong>Tòpics:</strong> 
                             <c:forEach items="${article.topics}" var="topic">
                                 ${topic}
                             </c:forEach>
                         </p>
-
-                        <!-- Mostrar imatge si existeix -->
                         <c:if test="${not empty article.image}">
                             <img src="${article.image}" alt="Imatge de l'article" />
                         </c:if>
-
-                        <!-- Privat -->
-                        <p><strong>Privat:</strong>
+                        <p><strong>Privat:</strong> 
                             <c:choose>
                                 <c:when test="${article.isPrivate}">Sí</c:when>
                                 <c:otherwise>No</c:otherwise>
@@ -92,8 +70,6 @@
                 </c:forEach>
             </div>
         </c:if>
-
-        <!-- Missatge quan no hi ha articles -->
         <c:if test="${empty articles}">
             <p class="error-message">No hi ha articles disponibles per mostrar.</p>
         </c:if>

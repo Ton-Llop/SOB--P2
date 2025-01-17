@@ -15,16 +15,23 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Collections;
+import jakarta.ws.rs.client.WebTarget;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
-public class ArticleServiceImpl implements ArticleService {
-
+public class ArticleServiceImpl implements ArticleService{
+    
+    
+    private final WebTarget webTarget;
+    private final jakarta.ws.rs.client.Client client;
     private static final String BASE_URL = "http://localhost:8080/Homework1/rest/api/v1/article";
-    private final Client client;
-
+    
     public ArticleServiceImpl() {
-        this.client = ClientBuilder.newClient();
+        client = jakarta.ws.rs.client.ClientBuilder.newClient();
+        webTarget = client.target(BASE_URL);
     }
+   
 
     @Override
 public List<Article> getByTopicAndUser(String authorId, String... topicsId) {
@@ -72,10 +79,10 @@ public List<Article> getByTopicAndUser(String authorId, String... topicsId) {
                                   .get();
 
         System.out.println("HTTP Status: " + response.getStatus());
-        System.out.println("Response: " + response.readEntity(String.class));
 
         if (response.getStatus() == Response.Status.OK.getStatusCode()) {
-            return response.readEntity(new GenericType<List<Article>>() {});
+            List<Map<String, Object>> rawData = response.readEntity(new GenericType<List<Map<String, Object>>>() {});
+            return rawData.stream().map(Article::fromMap).collect(Collectors.toList());
         } else {
             System.err.println("Error al obtener los artículos: " + response.getStatus());
             return Collections.emptyList();
@@ -85,6 +92,7 @@ public List<Article> getByTopicAndUser(String authorId, String... topicsId) {
         return Collections.emptyList();
     }
 }
+
 
     
 
