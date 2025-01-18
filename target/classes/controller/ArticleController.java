@@ -10,38 +10,27 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Context;
 
+@Path("/Article-Detall")
 @Controller
-@Path("/article")
 public class ArticleController {
 
     @Inject
     private ArticleService articleService;
 
     @GET
-    @Path("/{id}")
-    public String getArticleDetail(@PathParam("id") int id, @Context HttpServletRequest request, Models models) {
-        // Obtenir la sessió
-        HttpSession session = request.getSession(false);
-        boolean isAuthenticated = (session != null && session.getAttribute("username") != null);
-
-        // Obtenir l'article
-        Article article = articleService.getArticleById(id);
+    public String showArticleDetail(@QueryParam("id") int id, @Context HttpServletRequest request) {
+      
+        Article article = articleService.obtenirArticle(id);
         if (article == null) {
-            models.put("error", "L'article no existeix.");
-            return "Error404.jsp";
+            request.setAttribute("errorMessage", "No s'ha trobat l'article.");
+            return "/WEB-INF/views/layout/Articles.jsp";
         }
 
-        // Si l'article és privat i l'usuari no està autenticat
-        if (article.getIsPrivate() && !isAuthenticated) {
-            models.put("error", "Aquest article és privat. Necessites iniciar sessió per accedir-hi.");
-            return "/WEB-INF/views/layout/login-form.jsp"; // Redirigir al login
-        }
-
-        // Afegir l'article al model per mostrar-lo a la vista
-        models.put("article", article);
-        return "/WEB-INF/views/layout/article-detail.jsp";
+        request.setAttribute("article", article);
+        return "/WEB-INF/views/layout/Article-Detall.jsp";
     }
 }
-    
+

@@ -8,6 +8,6 @@ public interface ArticleService {
 
     public List<Article> getByTopicAndUser(String authorId, String... topicsId);
     public List<Article> getArticles();
-    public Article getArticleById(int id);
+    public Article obtenirArticle(int id);
     public int crearArticle(Article nou, String username, String encodedPassword);
 }

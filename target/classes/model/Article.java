@@ -1,5 +1,6 @@
 package deim.urv.cat.homework2.model;
 
+import static com.sun.org.apache.xalan.internal.lib.ExsltDynamic.map;
 import jakarta.persistence.Column;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -20,7 +21,7 @@ public class Article implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long id;
+    private int id;
 
     private String title; 
     private String content; 
@@ -36,11 +37,11 @@ public class Article implements Serializable {
     private List<String> topics; 
 
     // Getters y Setters
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -110,6 +111,7 @@ public class Article implements Serializable {
     
     public static Article fromMap(Map<String, Object> data) {
     Article article = new Article();
+    article.setId(((Number) data.get("id")).intValue());
     article.setTitle((String) data.get("titol"));
     article.setContent((String) data.get("descripcio"));
     article.setViews(((Number) data.get("nViews")).intValue());

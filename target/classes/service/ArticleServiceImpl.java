@@ -16,6 +16,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Collections;
 import jakarta.ws.rs.client.WebTarget;
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -96,24 +97,44 @@ public List<Article> getByTopicAndUser(String authorId, String... topicsId) {
 
     
 
-    @Override
-    public Article getArticleById(int id) {
-        try {
-            Response response = client.target(BASE_URL + "/" + id)
-                .request(MediaType.APPLICATION_JSON)
-                .get();
+@Override
+public Article obtenirArticle(int id) {
+    try {
+        Response response = client.target(BASE_URL + "/" + id)
+                                  .request(MediaType.APPLICATION_JSON)
+                                  .get();
 
-            if (response.getStatus() == Response.Status.OK.getStatusCode()) {
-                return response.readEntity(Article.class);
-            } else {
-                System.err.println("Error al obtener artículo por ID: " + response.getStatusInfo());
-                return null;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (response.getStatus() == Response.Status.OK.getStatusCode()) {
+            Map<String, Object> rawData = response.readEntity(new GenericType<Map<String, Object>>() {});
+            return mapToArticle(rawData);
+        } else {
+            System.err.println("Error al obtener artículo por ID: " + response.getStatusInfo());
             return null;
         }
+    } catch (Exception e) {
+        e.printStackTrace();
+        return null;
     }
+}
+private Article mapToArticle(Map<String, Object> map) {
+    Article article = new Article();
+    article.setId((int) ((Number) map.get("id")).longValue());
+    article.setImage((String) map.get("imatge"));
+    article.setTitle((String) map.get("titol"));
+    article.setContent((String) map.get("descripcio"));
+    article.setViews(((Number) map.get("nViews")).intValue());
+    article.setPublicationDate(LocalDateTime.parse((String) map.get("dataPubli"))); // Ajusta si usas otro formato
+    article.setTopics((List<String>) map.get("topics"));
+
+    // Si necesitas el autor
+    Usuari author = new Usuari();
+    author.setUsername((String) map.get("nomAut"));
+    article.setAuthor(author);
+
+    return article;
+}
+
+
 
     @Override
     public int crearArticle(Article nou, String username, String encodedPassword) {
