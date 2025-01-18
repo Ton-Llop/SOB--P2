@@ -118,6 +118,8 @@ public class Article implements Serializable {
     article.setPublicationDate(LocalDateTime.parse((String) data.get("dataPubli")));
     article.setTopics((List<String>) data.get("topics"));
     article.setImage((String) data.get("imatge"));
+     article.setIsPrivate((boolean) data.get("isPrivate"));
+
 
     String authorUsername = (String) data.get("nomAut");
     if (authorUsername != null) {

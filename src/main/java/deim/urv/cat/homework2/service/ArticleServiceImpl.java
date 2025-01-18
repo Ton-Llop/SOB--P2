@@ -125,6 +125,9 @@ private Article mapToArticle(Map<String, Object> map) {
     article.setViews(((Number) map.get("nViews")).intValue());
     article.setPublicationDate(LocalDateTime.parse((String) map.get("dataPubli"))); // Ajusta si usas otro formato
     article.setTopics((List<String>) map.get("topics"));
+    article.setIsPrivate((boolean) map.get("isPrivate"));
+
+    
 
     // Si necesitas el autor
     Usuari author = new Usuari();
