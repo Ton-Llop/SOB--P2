@@ -1,4 +1,5 @@
 deim\urv\cat\homework2\controller\CreacioArticleController.class
+deim\urv\cat\homework2\service\ArticleServiceImpl$4.class
 deim\urv\cat\homework2\model\AlertMessage.class
 deim\urv\cat\homework2\resources\JakartaEE9Resource.class
 deim\urv\cat\homework2\model\AlertMessage$Error.class
@@ -6,7 +7,6 @@ deim\urv\cat\homework2\model\AlertMessage$1.class
 deim\urv\cat\homework2\Config.class
 deim\urv\cat\homework2\PropertyProducer.class
 deim\urv\cat\homework2\MvcEventListener.class
-deim\urv\cat\homework2\model\User.class
 deim\urv\cat\homework2\controller\SignUpFormController.class
 deim\urv\cat\homework2\service\UserServiceImpl$1.class
 deim\urv\cat\homework2\service\ArticleServiceImpl.class
@@ -22,6 +22,7 @@ deim\urv\cat\homework2\model\Topic.class
 deim\urv\cat\homework2\controller\SignUpSuccessController.class
 deim\urv\cat\homework2\service\ArticleServiceImpl$2.class
 deim\urv\cat\homework2\model\AlertMessage$Type.class
+deim\urv\cat\homework2\service\ArticleServiceImpl$5.class
 deim\urv\cat\homework2\service\UserServiceImpl.class
 deim\urv\cat\homework2\controller\ArticlesController.class
 deim\urv\cat\homework2\model\SignUpAttempts.class

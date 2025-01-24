@@ -1,10 +1,10 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" isELIgnored="false" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <title>Sign Up</title>
     <link rel="stylesheet" type="text/css" href="<c:url value='/resources/css/estilPrincipal.css'/>" />
     <script>
@@ -30,10 +30,33 @@
             }
         }
 
-        // Asignar el evento de validación al campo de contraseña
+        // Validación de todos los campos
+        function validateForm() {
+            const inputs = document.querySelectorAll('.form-input');
+            let isValid = true;
+
+            inputs.forEach(input => {
+                if (!input.value) {
+                    input.classList.add('invalid-input');
+                    isValid = false;
+                } else {
+                    input.classList.remove('invalid-input');
+                }
+            });
+
+            return isValid;
+        }
+
         document.addEventListener('DOMContentLoaded', function () {
             const passwordField = document.getElementById('password');
             passwordField.addEventListener('input', validatePassword);
+
+            document.querySelector('form').addEventListener('submit', function (event) {
+                if (!validateForm()) {
+                    event.preventDefault();
+                    alert('Por favor, completa todos los campos obligatorios.');
+                }
+            });
         });
     </script>
 </head>
@@ -55,19 +78,16 @@
 
        <!-- Botons a la dreta -->
        <div class="header-buttons">
-           <!-- Botó Filtrar -->
            <form action="<c:url value='/Web/Filtrar'/>" method="GET">
                <button type="submit">Filtrar</button>
            </form>
            <c:choose>
                <c:when test="${isLoggedIn}">
-                   <!-- Botó de tancar sessió -->
                    <form action="<c:url value='/Web/Logout'/>" method="GET">
                        <button type="submit">Tanca Sessió</button>
                    </form>
                </c:when>
                <c:otherwise>
-                   <!-- Botons de login i registre -->
                    <form action="<c:url value='/Web/Login'/>" method="GET">
                        <button type="submit">Iniciar Sessió</button>
                    </form>
@@ -80,82 +100,70 @@
    </div>
 </header>
 
-<!-- Contenedor principal centrado -->
+<!-- Contenedor principal -->
 <main class="container" style="margin-top: 80px;">
-
-    <!-- Mostra el missatge d'error si existeix -->
+    <!-- Mostrar mensajes de error o información -->
     <c:if test="${not empty error}">
         <div class="error-message">
             ${error}
         </div>
     </c:if>
+    <c:if test="${not empty message}">
+        <div class="info-message">
+            ${message}
+        </div>
+    </c:if>
 
-    <!-- Formulario centrado -->
+    <!-- Formulario -->
     <form action="<c:url value='SignUp'/>" method="POST" class="form-container">
-        <input type="hidden" name="${mvc.csrf.name}" value="${mvc.csrf.token}"/>
+        <input type="hidden" name="${mvc.csrf.name}" value="${mvc.csrf.token}" />
 
         <!-- Nom -->
         <div class="form-group">
-            <label for="nom" class="form-label">Nom</label>
+            <label for="nom">Nom</label>
             <input type="text" id="nom" name="nom" class="form-input" placeholder="Nom" value="${user.nom}" required>
         </div>
 
         <!-- Usuari -->
         <div class="form-group">
-            <label for="username" class="form-label">Usuari</label>
+            <label for="username">Usuari</label>
             <input type="text" id="username" name="username" class="form-input" placeholder="Usuari" value="${user.username}" required>
         </div>
 
         <!-- Telèfon -->
         <div class="form-group">
-            <label for="telf" class="form-label">Telèfon</label>
+            <label for="telf">Telèfon</label>
             <input type="text" id="telf" name="telf" class="form-input" placeholder="Telèfon" value="${user.telf}" required>
         </div>
 
         <!-- DNI -->
         <div class="form-group">
-            <label for="dni" class="form-label">DNI</label>
+            <label for="dni">DNI</label>
             <input type="text" id="dni" name="dni" class="form-input" placeholder="DNI" value="${user.dni}" required>
         </div>
 
         <!-- Email -->
         <div class="form-group">
-            <label for="email" class="form-label">Email</label>
+            <label for="email">Email</label>
             <input type="email" id="email" name="email" class="form-input" placeholder="Email" value="${user.email}" required>
         </div>
 
         <!-- Contrasenya -->
         <div class="form-group">
-            <label for="password" class="form-label">Contrasenya</label>
+            <label for="password">Contrasenya</label>
             <input type="password" id="password" name="password" class="form-input" placeholder="Contrasenya" required>
             <div id="password-error" class="error-text"></div>
         </div>
 
-        <!-- Contenedor para los botones -->
+        <!-- Botones -->
         <div class="button-container">
-            <div class="back-button-container">
-                <button type="button" onclick="goBack(event)" class="back-button">
-                    Cancelar
-                </button>
-            </div>
-
-            <div class="create-button-container">
-                <button type="submit" class="back-button">
-                    Registrar-se
-                </button>
-            </div>
+            <button type="button" onclick="goBack(event)" class="back-button">Cancelar</button>
+            <button type="submit" class="register-button">Registrar-se</button>
         </div>
     </form>
 </main>
 
 <style>
-    .welcome-container {
-        display: flex;
-        align-items: center;
-        color: white;
-        font-size: 20px;
-    }
-
     .form-container {
         display: flex;
         flex-direction: column;
@@ -170,7 +178,6 @@
     }
 
     .form-group label {
-        display: block;
         font-weight: bold;
         margin-bottom: 5px;
     }
@@ -181,60 +188,40 @@
         font-size: 16px;
         border: 1px solid #ccc;
         border-radius: 5px;
-        box-sizing: border-box;
     }
 
     .form-input.invalid-input {
         border-color: red;
     }
 
-    .error-text {
+    .error-message {
         color: red;
         font-size: 14px;
-        margin-top: 5px;
+        margin: 10px 0;
     }
 
     .button-container {
         display: flex;
         justify-content: space-between;
-        align-items: center;
-        width: 100%;
-        margin-top: 20px;
         gap: 20px;
     }
 
-    .back-button-container,
-    .create-button-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 48%;
-        margin: 0;
-        padding: 0;
+    .back-button, .register-button {
+        padding: 10px 15px;
+        font-size: 14px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
     }
 
-    .back-button,
-    .create-button-container button {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0;
-        padding: 0 20px;
-        width: 100%;
-        max-width: 200px;
-        height: 50px;
+    .back-button {
         background-color: #f1f1f1;
         color: #333;
-        border: none;
-        border-radius: 5px;
-        font-size: 16px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
     }
 
-    .back-button:hover,
-    .create-button-container button:hover {
-        background-color: #ddd;
+    .register-button {
+        background-color: #007bff;
+        color: white;
     }
 </style>
 </body>

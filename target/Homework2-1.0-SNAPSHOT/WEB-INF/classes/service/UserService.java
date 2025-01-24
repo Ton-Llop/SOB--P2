@@ -1,7 +1,6 @@
 package deim.urv.cat.homework2.service;
 
 import deim.urv.cat.homework2.controller.UserForm;
-import deim.urv.cat.homework2.model.User;
 import deim.urv.cat.homework2.model.Usuari;
 import java.util.List;
 

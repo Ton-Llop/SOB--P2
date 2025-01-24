@@ -11,6 +11,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.ElementCollection;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.util.Map;
 
@@ -22,6 +24,7 @@ public class Article implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private int id;
+    
 
     private String title; 
     private String content; 
@@ -109,6 +112,10 @@ public class Article implements Serializable {
         this.topics = topics;
     }
     
+   
+
+
+    
     public static Article fromMap(Map<String, Object> data) {
     Article article = new Article();
     article.setId(((Number) data.get("id")).intValue());
@@ -118,7 +125,7 @@ public class Article implements Serializable {
     article.setPublicationDate(LocalDateTime.parse((String) data.get("dataPubli")));
     article.setTopics((List<String>) data.get("topics"));
     article.setImage((String) data.get("imatge"));
-     article.setIsPrivate((boolean) data.get("isPrivate"));
+    article.setIsPrivate((boolean) data.get("isPrivate"));
 
 
     String authorUsername = (String) data.get("nomAut");

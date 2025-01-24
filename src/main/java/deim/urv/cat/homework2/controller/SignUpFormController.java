@@ -34,7 +34,7 @@ public class SignUpFormController {
     
     @GET
     public String showForm() {
-        return "/WEB-INF/views/layout/signup-form.jsp";
+        return "/WEB-INF/views/layout/signup-form.jsp"; // Injects CRSF token
     }    
     
     @POST

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import deim.urv.cat.homework2.model.Article;
 import deim.urv.cat.homework2.model.Usuari;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
@@ -18,17 +20,20 @@ import java.util.Collections;
 import jakarta.ws.rs.client.WebTarget;
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 
 public class ArticleServiceImpl implements ArticleService{
-    
-    
+   
     private final WebTarget webTarget;
     private final jakarta.ws.rs.client.Client client;
     private static final String BASE_URL = "http://localhost:8080/Homework1/rest/api/v1/article";
     
+   
+    
     public ArticleServiceImpl() {
+        
         client = jakarta.ws.rs.client.ClientBuilder.newClient();
         webTarget = client.target(BASE_URL);
     }
@@ -37,39 +42,51 @@ public class ArticleServiceImpl implements ArticleService{
     @Override
 public List<Article> getByTopicAndUser(String authorId, String... topicsId) {
     try {
-        // Construir els paràmetres de la consulta
+        // Construir los parámetros de consulta
         StringBuilder queryParams = new StringBuilder();
-        if (authorId != null && !authorId.isEmpty()) {
+        
+        // Solo incluir el parámetro `author` si no está vacío
+        if (authorId != null && !authorId.trim().isEmpty()) {
             queryParams.append("?author=").append(URLEncoder.encode(authorId, StandardCharsets.UTF_8));
         }
+        
+        // Agregar los tópicos a la consulta
         if (topicsId != null && topicsId.length > 0) {
-            if (queryParams.length() > 0) {
-                queryParams.append("&");
-            } else {
-                queryParams.append("?");
+            for (String topic : topicsId) {
+                if (queryParams.length() > 0) {
+                    queryParams.append("&");
+                } else {
+                    queryParams.append("?");
+                }
+                queryParams.append("topic=").append(URLEncoder.encode(topic, StandardCharsets.UTF_8));
             }
-            queryParams.append("topic=").append(URLEncoder.encode(String.join(",", topicsId), StandardCharsets.UTF_8));
         }
 
-        // Fer la crida REST
-        Response response = client.target(BASE_URL + queryParams.toString())
-                .request(MediaType.APPLICATION_JSON)
-                .get();
+        // Log para depuración de la URL generada
+        System.out.println("URL generada: " + BASE_URL + queryParams.toString());
 
-        // Comprovar la resposta
+        // Realizar la llamada REST
+        Response response = client.target(BASE_URL + queryParams.toString())
+                                  .request(MediaType.APPLICATION_JSON)
+                                  .get();
+
+        // Comprobar la respuesta
         if (response.getStatus() == Response.Status.OK.getStatusCode()) {
-            return response.readEntity(new GenericType<List<Article>>() {});
+            List<Map<String, Object>> rawData = response.readEntity(new GenericType<List<Map<String, Object>>>() {});
+            return rawData.stream().map(Article::fromMap).collect(Collectors.toList());
         } else {
-            System.err.println("Error al obtenir articles. Codi: " + response.getStatus());
-            System.err.println("Detall de l'error: " + response.readEntity(String.class));
-            return new ArrayList<>();
+            System.err.println("Error al obtener artículos. Código: " + response.getStatus());
+            System.err.println("Detalle del error: " + response.readEntity(String.class));
+            return Collections.emptyList();
         }
     } catch (Exception e) {
-        System.err.println("Excepció al obtenir articles: " + e.getMessage());
+        System.err.println("Excepción al obtener artículos: " + e.getMessage());
         e.printStackTrace();
-        return new ArrayList<>();
+        return Collections.emptyList();
     }
 }
+
+
 
 
     @Override
@@ -139,6 +156,8 @@ private Article mapToArticle(Map<String, Object> map) {
 
 
 
+
+
     @Override
     public int crearArticle(Article nou, String username, String encodedPassword) {
     try {
@@ -161,4 +180,62 @@ private Article mapToArticle(Map<String, Object> map) {
     }
     return 0;
 }
+    
+    public List<String> getAuthors() {
+    try {
+        // Realizar una solicitud al backend para obtener todos los artículos
+        Response response = client.target(BASE_URL)
+                                  .request(MediaType.APPLICATION_JSON)
+                                  .get();
+
+        if (response.getStatus() == Response.Status.OK.getStatusCode()) {
+            // Leer la respuesta como una lista de mapas
+            List<Map<String, Object>> articles = response.readEntity(new GenericType<List<Map<String, Object>>>() {});
+
+            // Extraer y devolver los autores únicos
+            return articles.stream()
+                           .map(article -> (String) article.get("nomAut")) // Extraer el valor de "nomAut"
+                           .filter(Objects::nonNull) // Filtrar valores nulos (si los hubiera)
+                           .distinct() // Eliminar duplicados
+                           .collect(Collectors.toList());
+        } else {
+            System.err.println("Error al obtener autores: " + response.getStatus());
+            return Collections.emptyList();
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+        return Collections.emptyList();
+    }
 }
+
+
+
+    
+public List<String> getTopics() {
+    try {
+        // Realizar una solicitud al backend para obtener todos los artículos
+        Response response = client.target(BASE_URL)
+                                  .request(MediaType.APPLICATION_JSON)
+                                  .get();
+
+        if (response.getStatus() == Response.Status.OK.getStatusCode()) {
+            // Procesar los artículos y extraer los tópicos únicos
+            List<Article> articles = response.readEntity(new GenericType<List<Article>>() {});
+            return articles.stream()
+                           .flatMap(article -> article.getTopics().stream())
+                           .distinct()
+                           .collect(Collectors.toList());
+        } else {
+            System.err.println("Error al obtener tópicos: " + response.getStatus());
+            return Collections.emptyList();
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+        return Collections.emptyList();
+    }
+}
+
+}
+
+
+
