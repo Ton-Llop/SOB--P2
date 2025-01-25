@@ -7,28 +7,29 @@
     <link rel="stylesheet" type="text/css" href="<c:url value='/resources/css/estilPrincipal.css'/>">
     <style>
         .article-container {
-            display: flex;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 3 columnas */
             gap: 20px;
+            margin-top: 20px;
         }
         .article {
             border: 1px solid #ccc;
             padding: 15px;
             border-radius: 8px;
             background-color: #f9f9f9;
-            max-width: 300px;
-            flex: 1 1 calc(33.333% - 20px);
-            box-sizing: border-box;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
         .article img {
             max-width: 100%;
             height: auto;
             border-radius: 5px;
+            margin-bottom: 10px;
         }
         .error-message {
             color: red;
             font-weight: bold;
             margin: 10px 0;
+            text-align: center;
         }
         .article a {
             text-decoration: none;

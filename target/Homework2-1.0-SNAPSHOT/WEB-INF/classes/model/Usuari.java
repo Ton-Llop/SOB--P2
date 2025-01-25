@@ -1,14 +1,10 @@
 package deim.urv.cat.homework2.model;
 
+import jakarta.persistence.*;
+import jakarta.xml.bind.annotation.XmlRootElement;
+
 import java.io.Serializable;
 import java.util.List;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 @Entity
@@ -19,15 +15,17 @@ public class Usuari implements Serializable {
     @SequenceGenerator(name = "USER_GEN", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "USER_GEN")
     private Long id;
-    
+
     private String nom;
-    private String username; 
-    private String email;    
-    private String password; 
-    
-    
-    @OneToMany(mappedBy = "author") // Relación uno a muchos con la clase Article
-    private List<Article> articles; // Lista de artículos escritos por el usuario
+    private String username;
+    private String email;
+    private String password;
+    private String dni;   // Nuevo atributo
+    private String telef; // Nuevo atributo
+
+    @OneToMany(mappedBy = "author")
+    private List<Article> articles;
+
     private String CodiArticle;
 
     // Getters y Setters
@@ -38,7 +36,15 @@ public class Usuari implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-    
+
+    public String getNom() {
+        return nom;
+    }
+
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -63,14 +69,22 @@ public class Usuari implements Serializable {
         this.password = password;
     }
 
-    public String getNom() {
-        return nom;
+    public String getDni() {
+        return dni;
     }
 
-    public void setNom(String nom) {
-        this.nom = nom;
+    public void setDni(String dni) {
+        this.dni = dni;
     }
-    
+
+    public String getTelef() {
+        return telef;
+    }
+
+    public void setTelef(String telef) {
+        this.telef = telef;
+    }
+
     public List<Article> getArticles() {
         return articles;
     }
@@ -78,46 +92,12 @@ public class Usuari implements Serializable {
     public void setArticles(List<Article> articles) {
         this.articles = articles;
     }
-    
+
     public String getCodiArticle() {
         return CodiArticle;
     }
+
     public void setCodiArticle(String CodiArticle) {
         this.CodiArticle = CodiArticle;
-    }
-    
-    
-    // hashCode, equals y toString
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // Nota: este método no funcionará si los campos id no están configurados
-        if (!(object instanceof Usuari)) {
-            return false;
-        }
-        Usuari other = (Usuari) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "model.entities.User[ id=" + id + ", username=" + username + " ]";
-    }
-
-    public Object getDni() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    public Object getTelef() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

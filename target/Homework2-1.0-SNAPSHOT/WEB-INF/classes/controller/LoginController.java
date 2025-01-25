@@ -43,6 +43,7 @@ public class LoginController {
                 // Crear una sesión para el usuario autenticado
                 HttpSession session = request.getSession(true);
                 session.setAttribute("username", loginForm.getId());
+                session.setAttribute("password", loginForm.getId());
 
                 log.log(Level.INFO, "Login correcte per a l'usuari: {0}", loginForm.getId());
 

@@ -1,9 +1,9 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" isELIgnored="false" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Detall de l'Article</title>
+    <title>Article Creat</title>
     <link rel="stylesheet" type="text/css" href="<c:url value='/resources/css/estilPrincipal.css'/>">
     <style>
         body {
@@ -59,8 +59,14 @@
 <body>
     <div class="container">
         <c:if test="${not empty article}">
-            <!-- Títol de l'article -->
-            <h1>${article.title}</h1>
+            <!-- Mensaje de éxito -->
+            <h1>Article Creat Amb Èxit</h1>
+
+            <!-- ID -->
+            <p><strong>ID:</strong> ${article.id}</p>
+
+            <!-- Títol -->
+            <p><strong>Títol:</strong> ${article.title}</p>
 
             <!-- Autor -->
             <p><strong>Autor:</strong> ${article.author.username}</p>
@@ -73,12 +79,12 @@
             <!-- Visualitzacions -->
             <p><strong>Visualitzacions:</strong> ${article.views}</p>
 
-            <!-- Descripció -->
+            <!-- Contingut -->
             <p><strong>Contingut:</strong> ${article.content}</p>
 
             <!-- Tòpics -->
             <p><strong>Tòpics:</strong> 
-                <c:forEach items="${article.topics}" var="topic">
+                <c:forEach var="topic" items="${article.topics}">
                     ${topic}
                 </c:forEach>
             </p>
@@ -104,10 +110,8 @@
             <p style="color: red;">No s'ha pogut trobar l'article.</p>
         </c:if>
 
-        <!-- Botó per tornar enrere -->
-        <a href="<c:url value='/Web/Articles'/>" class="back-button">Tornar al llistat</a>
-        <a href="<c:url value='/Web/Filtrar'/>" class="back-button">Tornar als Filtres</a>
-        
+        <!-- Botó per tornar al Home -->
+        <a href="<c:url value='/Web/Home'/>" class="back-button">Torna al Home</a>
     </div>
 </body>
 </html>

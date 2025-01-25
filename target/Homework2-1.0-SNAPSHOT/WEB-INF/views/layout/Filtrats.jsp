@@ -49,30 +49,39 @@
             margin: 5px 0;
         }
 
-        .error {
-            color: red;
-            font-weight: bold;
-            text-align: center;
-        }
-
-        .back-button {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 10px 15px;
+        .detail-button {
             background-color: #007bff;
             color: white;
             text-decoration: none;
-            border-radius: 5px;
-            text-align: center;
+            padding: 10px 15px;
+            border-radius: 4px;
+            font-size: 14px;
+            display: inline-block;
+            margin-top: 10px;
         }
 
-        .back-button:hover {
+        .detail-button:hover {
             background-color: #0056b3;
         }
 
         .no-articles {
             text-align: center;
             margin-top: 50px;
+        }
+
+        .back-button {
+            background-color: #28a745;
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            font-size: 14px;
+            display: inline-block;
+            margin-top: 20px;
+        }
+
+        .back-button:hover {
+            background-color: #218838;
         }
     </style>
 </head>
@@ -96,6 +105,9 @@
                         </p>
                         <p><strong>Contingut:</strong> ${article.content}</p>
                         <p><strong>Publicat el:</strong> ${article.publicationDate}</p>
+
+                        <!-- Botón para ver detalles del artículo -->
+                        <a href="<c:url value='/Web/Article-Detall?id=${article.id}'/>" class="detail-button">Veure Detalls</a>
                     </div>
                 </c:forEach>
                 <!-- Botón para volver al formulario de filtros -->

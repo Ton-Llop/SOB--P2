@@ -61,45 +61,6 @@
     </script>
 </head>
 <body>
-<header class="header">
-   <div class="header-content">
-       <!-- Text de benvinguda a l'esquerra -->
-       <c:choose>
-           <c:when test="${isLoggedIn}">
-               <div class="welcome-container">
-                   <form action="<c:url value='/Web/userInfo'/>" method="GET" style="margin: 0;">
-                       <button type="submit" class="welcome-button">
-                           Benvingut, <strong>${username}</strong>
-                       </button>
-                   </form>
-               </div>
-           </c:when>
-       </c:choose>
-
-       <!-- Botons a la dreta -->
-       <div class="header-buttons">
-           <form action="<c:url value='/Web/Filtrar'/>" method="GET">
-               <button type="submit">Filtrar</button>
-           </form>
-           <c:choose>
-               <c:when test="${isLoggedIn}">
-                   <form action="<c:url value='/Web/Logout'/>" method="GET">
-                       <button type="submit">Tanca Sessió</button>
-                   </form>
-               </c:when>
-               <c:otherwise>
-                   <form action="<c:url value='/Web/Login'/>" method="GET">
-                       <button type="submit">Iniciar Sessió</button>
-                   </form>
-                   <form action="<c:url value='/Web/SignUp'/>" method="GET">
-                       <button type="submit">Registrar-se</button>
-                   </form>
-               </c:otherwise>
-           </c:choose>
-       </div>
-   </div>
-</header>
-
 <!-- Contenedor principal -->
 <main class="container" style="margin-top: 80px;">
     <!-- Mostrar mensajes de error o información -->
@@ -115,53 +76,62 @@
     </c:if>
 
     <!-- Formulario -->
-    <form action="<c:url value='SignUp'/>" method="POST" class="form-container">
-        <input type="hidden" name="${mvc.csrf.name}" value="${mvc.csrf.token}" />
+   <form action="<c:url value='SignUp'/>" method="POST" class="form-container">
+    <input type="hidden" name="${mvc.csrf.name}" value="${mvc.csrf.token}" />
 
-        <!-- Nom -->
-        <div class="form-group">
-            <label for="nom">Nom</label>
-            <input type="text" id="nom" name="nom" class="form-input" placeholder="Nom" value="${user.nom}" required>
-        </div>
+    <!-- Nom -->
+    <div class="form-group">
+        <label for="nom">Nom</label>
+        <input type="text" id="nom" name="nom" class="form-input" placeholder="Nom" value="${user.nom}" required>
+    </div>
 
-        <!-- Usuari -->
-        <div class="form-group">
-            <label for="username">Usuari</label>
-            <input type="text" id="username" name="username" class="form-input" placeholder="Usuari" value="${user.username}" required>
-        </div>
+    <!-- Username -->
+    <div class="form-group">
+        <label for="username">Usuari</label>
+        <input type="text" id="username" name="username" class="form-input" placeholder="Usuari" value="${user.username}" required>
+    </div>
 
-        <!-- Telèfon -->
-        <div class="form-group">
-            <label for="telf">Telèfon</label>
-            <input type="text" id="telf" name="telf" class="form-input" placeholder="Telèfon" value="${user.telf}" required>
-        </div>
+    <!-- Telèfon -->
+    <div class="form-group">
+        <label for="telf">Telèfon</label>
+        <input type="text" id="telf" name="telf" class="form-input" placeholder="Telèfon" value="${user.telf}" required>
+    </div>
 
-        <!-- DNI -->
-        <div class="form-group">
-            <label for="dni">DNI</label>
-            <input type="text" id="dni" name="dni" class="form-input" placeholder="DNI" value="${user.dni}" required>
-        </div>
+    <!-- DNI -->
+    <div class="form-group">
+        <label for="dni">DNI</label>
+        <input type="text" id="dni" name="dni" class="form-input" placeholder="DNI" value="${user.dni}" required>
+    </div>
 
-        <!-- Email -->
-        <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" class="form-input" placeholder="Email" value="${user.email}" required>
-        </div>
+    <!-- Email -->
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" class="form-input" placeholder="Email" value="${user.email}" required>
+    </div>
 
-        <!-- Contrasenya -->
-        <div class="form-group">
-            <label for="password">Contrasenya</label>
-            <input type="password" id="password" name="password" class="form-input" placeholder="Contrasenya" required>
-            <div id="password-error" class="error-text"></div>
-        </div>
+    <!-- Contrasenya -->
+    <div class="form-group">
+        <label for="password">Contrasenya</label>
+        <input type="password" id="password" name="password" class="form-input" placeholder="Contrasenya" required>
+        <div id="password-error" class="error-text"></div>
+    </div>
 
-        <!-- Botones -->
-        <div class="button-container">
-            <button type="button" onclick="goBack(event)" class="back-button">Cancelar</button>
-            <button type="submit" class="register-button">Registrar-se</button>
-        </div>
-    </form>
-</main>
+    <!-- Botones -->
+    <div class="button-container">
+        <button type="button" onclick="goBack(event)" class="back-button">Cancelar</button>
+        <button type="submit" class="register-button">Registrar-se</button>
+    </div>
+</form>
+
+<!-- Mostrar errores -->
+<c:if test="${not empty errors}">
+    <ul class="error-list">
+        <c:forEach var="error" items="${errors.allErrors}">
+            <li>${error.message}</li>
+        </c:forEach>
+    </ul>
+</c:if>
+
 
 <style>
     .form-container {

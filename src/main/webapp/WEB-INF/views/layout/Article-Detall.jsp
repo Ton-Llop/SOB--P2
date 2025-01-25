@@ -38,7 +38,7 @@
             max-width: 100%;
             height: auto;
             border-radius: 8px;
-            margin-bottom: 20px;
+            margin-top: 20px;
         }
 
         .back-button {
@@ -61,13 +61,6 @@
         <c:if test="${not empty article}">
             <!-- Títol de l'article -->
             <h1>${article.title}</h1>
-
-            <!-- Imatge -->
-            <c:if test="${not empty article.image}">
-                <div class="image-container">
-                    <img src="${article.image}" alt="Imatge de l'article">
-                </div>
-            </c:if>
 
             <!-- Autor -->
             <p><strong>Autor:</strong> ${article.author.username}</p>
@@ -97,6 +90,13 @@
                     <c:otherwise>No</c:otherwise>
                 </c:choose>
             </p>
+
+            <!-- Imatge -->
+            <c:if test="${not empty article.image}">
+                <div class="image-container">
+                    <img src="${article.image}" alt="Imatge de l'article">
+                </div>
+            </c:if>
         </c:if>
 
         <!-- Missatge si no hi ha article -->
@@ -106,6 +106,8 @@
 
         <!-- Botó per tornar enrere -->
         <a href="<c:url value='/Web/Articles'/>" class="back-button">Tornar al llistat</a>
+        <a href="<c:url value='/Web/Filtrar'/>" class="back-button">Tornar als Filtres</a>
+        
     </div>
 </body>
 </html>

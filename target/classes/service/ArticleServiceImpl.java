@@ -158,28 +158,34 @@ private Article mapToArticle(Map<String, Object> map) {
 
 
 
-    @Override
-    public int crearArticle(Article nou, String username, String encodedPassword) {
+   @Override
+    public int crearArticle(Article article, String username, String encodedPassword) {
     try {
+        // Construir las credenciales en formato Basic Auth
         String credentials = username + ":" + encodedPassword;
         String encodedCredentials = Base64.getEncoder().encodeToString(credentials.getBytes(StandardCharsets.UTF_8));
 
-        Response response = client.target("http://localhost:8080/Homework1/rest/api/v1/article")
-                .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, "Basic " + encodedCredentials)
-                .post(Entity.entity(nou, MediaType.APPLICATION_JSON));
+        // Enviar el artículo al backend con el encabezado Authorization
+        Response response = client.target(BASE_URL)
+                                  .request(MediaType.APPLICATION_JSON)
+                                  .header(HttpHeaders.AUTHORIZATION, "Basic " + encodedCredentials)
+                                  .post(Entity.entity(article, MediaType.APPLICATION_JSON));
 
+        // Si la respuesta es exitosa
         if (response.getStatus() == Response.Status.CREATED.getStatusCode()) {
+            // Leer el ID generado desde la respuesta
             return response.readEntity(Integer.class);
         } else {
-            System.err.println("Error al crear artículo: " + response.getStatus());
-            System.err.println(response.readEntity(String.class));
+            System.err.println("Error al crear el artículo: " + response.readEntity(String.class));
         }
     } catch (Exception e) {
         e.printStackTrace();
     }
-    return 0;
+    return 0; // Retornar 0 si ocurre algún error
 }
+
+
+
     
     public List<String> getAuthors() {
     try {
