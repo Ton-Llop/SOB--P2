@@ -35,7 +35,7 @@ public class ArticleController {
 
         // Verificar si el artículo es privado
         if (article.getIsPrivate() && !isLoggedIn) {
-            // Guardar la URL en la sesión antes de redirigir al login
+            // ruta relativa
             String requestedUrl = request.getContextPath() + "/Article-Detall?id=" + id;
             request.getSession(true).setAttribute("redirectAfterLogin", requestedUrl);
             

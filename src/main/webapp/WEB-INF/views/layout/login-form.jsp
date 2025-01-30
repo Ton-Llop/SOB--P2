@@ -89,11 +89,6 @@
 
             <button type="submit">Inicia Sessió</button>
         </form>
-
-        <!-- Enllaç per a registrar-se -->
-        <p style="text-align: center; margin-top: 10px;">
-            Encara no tens un compte? <a href="<c:url value='/Web/SignUp' />">Registra't aquí</a>
-        </p>
     </div>
 </body>
 </html>

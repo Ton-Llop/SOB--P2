@@ -177,9 +177,6 @@
                     <form action="<c:url value='/Web/Login'/>" method="GET">
                         <button type="submit">Iniciar Sessió</button>
                     </form>
-                    <form action="<c:url value='/Web/SignUp'/>" method="GET">
-                        <button type="submit">Registrar-se</button>
-                    </form>
                 </c:if>
             </div>
         </div>
