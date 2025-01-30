@@ -29,37 +29,39 @@ public class LoginController {
 
     @GET
     public String showLoginForm() {
-        // Retorna el formulari de login
         return "/WEB-INF/views/layout/login-form.jsp";
     }
 
     @POST
-    public String login(@BeanParam LoginForm loginForm, @Context HttpServletRequest request) {
-        try {
-            // Comprobar las credenciales utilizando UserService
-            boolean loginSuccessful = userService.loginCorrecte(loginForm.getId(), loginForm.getPassword());
+public String login(@BeanParam LoginForm loginForm, @Context HttpServletRequest request) {
+    try {
+        boolean loginSuccessful = userService.loginCorrecte(loginForm.getId(), loginForm.getPassword());
 
-            if (loginSuccessful) {
-                // Crear una sesión para el usuario autenticado
-                HttpSession session = request.getSession(true);
-                session.setAttribute("username", loginForm.getId());
-                session.setAttribute("password", loginForm.getId());
+        if (loginSuccessful) {
+            HttpSession session = request.getSession(true);
+            session.setAttribute("username", loginForm.getId());
 
-                log.log(Level.INFO, "Login correcte per a l'usuari: {0}", loginForm.getId());
+            log.log(Level.INFO, "Login correcte per a l'usuari: {0}", loginForm.getId());
 
-                // Redirigir a la página de artículos tras un login exitoso
-                return "redirect:/Home";
-            } else {
-                // Credenciales incorrectas
-                log.log(Level.WARNING, "Login fallit per a l'usuari: {0}", loginForm.getId());
-                models.put("error", "Usuari o contrasenya incorrectes. Torna-ho a intentar.");
-                return "/WEB-INF/views/layout/login-form.jsp";
+            // Obtener la URL guardada antes del login
+            String redirectUrl = (String) session.getAttribute("redirectAfterLogin");
+            if (redirectUrl != null) {
+                session.removeAttribute("redirectAfterLogin"); // Limpiar la variable de sesión
+                return "redirect:" + redirectUrl.replace(request.getContextPath(), ""); // Evita duplicaciones
             }
-        } catch (Exception e) {
-            // Manejar errores inesperados
-            log.log(Level.SEVERE, "Error durant el procés de login", e);
-            models.put("error", "S'ha produït un error inesperat. Torna-ho a intentar més tard.");
+
+            // Si no hay URL almacenada, redirigir al home
+            return "redirect:/Home";
+        } else {
+            log.log(Level.WARNING, "Login fallit per a l'usuari: {0}", loginForm.getId());
+            models.put("error", "Usuari o contrasenya incorrectes. Torna-ho a intentar.");
             return "/WEB-INF/views/layout/login-form.jsp";
         }
+    } catch (Exception e) {
+        log.log(Level.SEVERE, "Error durant el procés de login", e);
+        models.put("error", "S'ha produït un error inesperat. Torna-ho a intentar més tard.");
+        return "/WEB-INF/views/layout/login-form.jsp";
     }
+}
+
 }

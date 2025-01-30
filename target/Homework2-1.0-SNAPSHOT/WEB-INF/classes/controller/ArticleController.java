@@ -4,12 +4,10 @@ import deim.urv.cat.homework2.model.Article;
 import deim.urv.cat.homework2.service.ArticleService;
 import jakarta.inject.Inject;
 import jakarta.mvc.Controller;
-import jakarta.mvc.Models;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Context;
 
@@ -37,13 +35,15 @@ public class ArticleController {
 
         // Verificar si el artículo es privado
         if (article.getIsPrivate() && !isLoggedIn) {
-            request.setAttribute("errorMessage", "Aquest article és privat. Si us plau, inicia sessió per accedir-hi.");
-            return "/WEB-INF/views/layout/login-form.jsp";
+            // Guardar la URL en la sesión antes de redirigir al login
+            String requestedUrl = request.getContextPath() + "/Article-Detall?id=" + id;
+            request.getSession(true).setAttribute("redirectAfterLogin", requestedUrl);
+            
+            // Redirigir al login
+            return "redirect:/Login";
         }
 
         request.setAttribute("article", article);
         return "/WEB-INF/views/layout/Article-Detall.jsp";
     }
 }
-
-
