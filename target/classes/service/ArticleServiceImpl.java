@@ -181,7 +181,7 @@ private Article mapToArticle(Map<String, Object> map) {
     } catch (Exception e) {
         e.printStackTrace();
     }
-    return 0; // Retornar 0 si ocurre algún error
+    return 0; 
 }
 
 

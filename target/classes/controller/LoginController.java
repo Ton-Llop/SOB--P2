@@ -40,6 +40,7 @@ public String login(@BeanParam LoginForm loginForm, @Context HttpServletRequest 
         if (loginSuccessful) {
             HttpSession session = request.getSession(true);
             session.setAttribute("username", loginForm.getId());
+            session.setAttribute("password", loginForm.getPassword());
 
             log.log(Level.INFO, "Login correcte per a l'usuari: {0}", loginForm.getId());
 
